@@ -12,7 +12,7 @@ namespace _Dapper_X_Swagger_.Services
 {
     public class GlobalRepository : IGlobalRepository
     {
-        private string ConnectionString = "default";
+        private readonly string ConnectionString = "default";
         private readonly IConfiguration _config;
 
         public GlobalRepository(IConfiguration config)
