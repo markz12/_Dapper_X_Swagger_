@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore; //for dbcontext
+using _Dapper_X_Swagger_.Services;
 
 namespace _Dapper_X_Swagger_
 {
@@ -36,7 +40,21 @@ namespace _Dapper_X_Swagger_
                     Description = "Using dapper & Swagger Technology for API Development",
                     Version = "v1"
                 });
+
+                var filename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var filePath = Path.Combine(AppContext.BaseDirectory, filename);
+                options.IncludeXmlComments(filePath);
             });
+            #endregion
+
+            #region Dapper Configuration
+                                                                    //Install Microsoft.EntityFrameworkCore.SqlServer to call the UseSqlServer Functionality.
+            services.AddDbContext<DataContext.AppContext>(options => options.UseSqlServer(Configuration.GetConnectionString("default"))); // add this to read the dbcontext and assigned connection string
+            services.AddScoped<IGlobalRepository, GlobalRepository>();  //declare Interface Dapper and Dapper Repository to read this classes during startup(Mark)
+            #endregion
+
+            #region This will be used to add asp views
+            services.AddControllersWithViews(); //this service is used to read the mvc view in the asp core api version
             #endregion
         }
 

@@ -11,6 +11,10 @@ namespace _Dapper_X_Swagger_.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-
+        [HttpGet(nameof(User))]
+        public IActionResult User()
+        {
+            return Ok("Welcome to Dapper X Swagger API");
+        }
     }
 }
